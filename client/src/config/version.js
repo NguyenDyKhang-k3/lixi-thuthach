@@ -1,6 +1,7 @@
 // Version info - Update this when deploying
-export const APP_VERSION = '1.2.0'
+export const APP_VERSION = '1.2.1'
 export const BUILD_TIME = new Date().toISOString()
+export const BUILD_ID = Date.now()
 
 // Changelog
 export const CHANGELOG = {
