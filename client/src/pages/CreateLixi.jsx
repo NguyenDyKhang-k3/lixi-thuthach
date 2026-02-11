@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { QRCodeSVG } from 'qrcode.react'
 import { TARGET_GROUPS, challengesByGroup } from '../data/challenges'
 import { createLixi, createLixiWithToken, getSettings, getChallenges } from '../api/lixiApi'
 
@@ -107,16 +108,38 @@ function CreateLixi() {
         <div className="card max-w-2xl w-full text-center">
           <div className="text-5xl mb-4 animate-bounce">🐴</div>
           <h2 className="text-3xl font-bold text-tet-red mb-4">Lì Xì Đã Được Tạo!</h2>
+          
+          {/* QR Code */}
+          <div className="bg-white p-6 rounded-xl mb-6 inline-block shadow-lg">
+            <QRCodeSVG 
+              value={generatedLink} 
+              size={200}
+              level="H"
+              includeMargin={true}
+            />
+            <p className="text-xs text-gray-500 mt-2">📱 Quét mã QR để nhận lì xì</p>
+          </div>
+
+          {/* Link text */}
           <div className="bg-gray-100 rounded-lg p-4 mb-6 break-all">
             <p className="text-sm text-gray-600 mb-2">Link lì xì của bạn:</p>
-            <p className="font-mono text-blue-600">{generatedLink}</p>
+            <p className="font-mono text-blue-600 text-sm">{generatedLink}</p>
           </div>
+
+          {/* Buttons */}
           <div className="space-y-3">
             <button onClick={copyLink} className="btn-primary w-full">📋 Copy Link</button>
             <button onClick={() => navigate('/')} className="btn-secondary w-full">🏠 Về Trang Chủ</button>
           </div>
+
+          {/* Instructions */}
           <div className="mt-6 p-4 bg-yellow-50 rounded-lg">
-            <p className="text-sm text-gray-700">💡 Gửi link này cho người nhận. Họ sẽ xem thử thách và upload bằng chứng!</p>
+            <p className="text-sm text-gray-700 font-semibold mb-2">💡 Cách gửi lì xì:</p>
+            <ul className="text-xs text-left text-gray-600 space-y-1">
+              <li>📱 <strong>Cho mã QR</strong>: Chụp màn hình hoặc show trực tiếp</li>
+              <li>🔗 <strong>Gửi link</strong>: Copy link và gửi qua Zalo/Messenger/SMS</li>
+              <li>📸 Người nhận sẽ xem thử thách và upload bằng chứng!</li>
+            </ul>
           </div>
         </div>
       </div>

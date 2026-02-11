@@ -5,6 +5,8 @@ function Home() {
   const navigate = useNavigate()
   const [isAdmin, setIsAdmin] = useState(() => !!localStorage.getItem('adminToken'))
   const [stars, setStars] = useState([])
+  const [showInput, setShowInput] = useState(false)
+  const [lixiCode, setLixiCode] = useState('')
 
   useEffect(() => {
     setIsAdmin(!!localStorage.getItem('adminToken'))
@@ -22,6 +24,14 @@ function Home() {
     }, 800)
     return () => clearInterval(interval)
   }, [])
+
+  const handleReceiveLixi = (e) => {
+    e?.preventDefault()
+    if (lixiCode.trim()) {
+      const match = lixiCode.match(/([a-f0-9-]+)$/i)
+      navigate(`/receive/${match ? match[1] : lixiCode}`)
+    }
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
@@ -105,18 +115,42 @@ function Home() {
             </button>
           )}
           
-          <button
-            onClick={() => {
-              const code = prompt('Nhập mã hoặc dán link lì xì của bạn:')
-              if (code) {
-                const match = code.match(/([a-f0-9-]+)$/i)
-                navigate(`/receive/${match ? match[1] : code}`)
-              }
-            }}
-            className="btn-secondary w-full text-xl py-4 hover:scale-105 transition-transform"
-          >
-            📬 Nhận Lì Xì
-          </button>
+          {/* Form nhập link lì xì */}
+          {showInput ? (
+            <form onSubmit={handleReceiveLixi} className="space-y-3">
+              <input
+                type="text"
+                value={lixiCode}
+                onChange={(e) => setLixiCode(e.target.value)}
+                placeholder="Dán link hoặc nhập mã lì xì..."
+                className="w-full px-4 py-3 border-2 border-amber-400 rounded-lg focus:border-tet-red focus:outline-none text-center"
+                autoFocus
+              />
+              <div className="flex gap-2">
+                <button
+                  type="submit"
+                  className="btn-primary flex-1 py-3"
+                  disabled={!lixiCode.trim()}
+                >
+                  ✅ Mở Lì Xì
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setShowInput(false); setLixiCode('') }}
+                  className="btn-secondary px-6 py-3"
+                >
+                  ✖️
+                </button>
+              </div>
+            </form>
+          ) : (
+            <button
+              onClick={() => setShowInput(true)}
+              className="btn-secondary w-full text-xl py-4 hover:scale-105 transition-transform"
+            >
+              📬 Nhận Lì Xì
+            </button>
+          )}
         </div>
 
         <div className="mt-8 text-sm text-gray-500">
