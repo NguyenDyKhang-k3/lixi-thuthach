@@ -3,45 +3,49 @@ import { useState, useEffect } from 'react'
 
 function Home() {
   const navigate = useNavigate()
-  const [fireworks, setFireworks] = useState([])
+  const [stars, setStars] = useState([])
 
   useEffect(() => {
-    // Tạo pháo hoa tự động
     const interval = setInterval(() => {
-      const newFirework = {
-        id: Date.now(),
+      setStars(prev => [...prev.slice(-15), {
+        id: Date.now() + Math.random(),
         left: Math.random() * 100,
         top: Math.random() * 100,
-      }
-      setFireworks(prev => [...prev, newFirework])
-      
-      // Xóa sau 1s
-      setTimeout(() => {
-        setFireworks(prev => prev.filter(f => f.id !== newFirework.id))
-      }, 1000)
-    }, 2000)
-
+        size: 2 + Math.random() * 4,
+        delay: Math.random() * 500,
+      }])
+    }, 800)
     return () => clearInterval(interval)
   }, [])
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Pháo hoa decorative */}
-      {fireworks.map(fw => (
+      {/* Background decorative stars */}
+      {stars.map((s) => (
         <div
-          key={fw.id}
-          className="absolute w-2 h-2 rounded-full bg-tet-gold firework"
-          style={{ left: `${fw.left}%`, top: `${fw.top}%` }}
+          key={s.id}
+          className="absolute rounded-full bg-tet-gold animate-shimmer"
+          style={{
+            left: `${s.left}%`,
+            top: `${s.top}%`,
+            width: s.size,
+            height: s.size,
+            animationDelay: `${s.delay}ms`,
+            opacity: 0.8,
+          }}
         />
       ))}
 
-      <div className="card max-w-2xl w-full text-center relative z-10">
-        {/* Header */}
+      <div className="card max-w-2xl w-full text-center relative z-10 animate-float">
+        {/* Header - Năm Ngựa 2026 */}
         <div className="mb-8">
-          <h1 className="text-6xl mb-4 animate-bounce-slow">🧧</h1>
-          <h1 className="text-4xl md:text-5xl font-bold text-tet-red mb-4">
+          <div className="text-7xl mb-4 animate-bounce">🐴</div>
+          <h1 className="text-4xl md:text-5xl font-bold text-tet-red mb-2">
             Lì Xì Thử Thách
           </h1>
+          <p className="text-lg text-amber-600 font-semibold mb-4">
+            Năm Bính Ngọ 2026
+          </p>
           <p className="text-xl text-gray-600">
             Gửi lì xì kèm thử thách vui nhộn!
           </p>
@@ -49,70 +53,66 @@ function Home() {
 
         {/* Description */}
         <div className="bg-gradient-to-r from-red-50 to-yellow-50 rounded-xl p-6 mb-8">
-          <h2 className="text-2xl font-bold text-tet-red mb-4">
-            Cách chơi
-          </h2>
+          <h2 className="text-2xl font-bold text-tet-red mb-4">Cách chơi</h2>
           <div className="text-left space-y-3 text-gray-700">
-            <div className="flex items-start">
-              <span className="text-2xl mr-3">✨</span>
-              <p>
-                <strong>Bước 1:</strong> Tạo lì xì với thử thách của bạn
-              </p>
+            <div className="flex items-start gap-3">
+              <span className="text-2xl">✨</span>
+              <p><strong>Bước 1:</strong> Tạo lì xì với thử thách (chọn theo Trẻ em / Nam / Nữ / Người lớn)</p>
             </div>
-            <div className="flex items-start">
-              <span className="text-2xl mr-3">🎯</span>
-              <p>
-                <strong>Bước 2:</strong> Gửi link cho người nhận
-              </p>
+            <div className="flex items-start gap-3">
+              <span className="text-2xl">🎯</span>
+              <p><strong>Bước 2:</strong> Gửi link cho người nhận</p>
             </div>
-            <div className="flex items-start">
-              <span className="text-2xl mr-3">📸</span>
-              <p>
-                <strong>Bước 3:</strong> Người nhận hoàn thành và upload bằng chứng
-              </p>
+            <div className="flex items-start gap-3">
+              <span className="text-2xl">📸</span>
+              <p><strong>Bước 3:</strong> Người nhận hoàn thành và upload bằng chứng</p>
             </div>
-            <div className="flex items-start">
-              <span className="text-2xl mr-3">💰</span>
+            <div className="flex items-start gap-3">
+              <span className="text-2xl">💰</span>
               <p>
-                <strong>Bước 4:</strong> Nhận lì xì: <span className="text-green-600 font-bold">200K</span> (thành công) 
-                hoặc <span className="text-orange-600 font-bold">100K</span> (thất bại)
+                <strong>Bước 4:</strong> Nhận lì xì: <span className="text-green-600 font-bold">Thành công</span> 
+                hoặc <span className="text-orange-600 font-bold">Thất bại</span> - cả hai đều có tiền!
               </p>
             </div>
           </div>
         </div>
 
-        {/* Highlight Box */}
         <div className="bg-tet-gold/20 border-2 border-tet-gold rounded-lg p-4 mb-8">
           <p className="text-lg font-semibold text-tet-dark">
             🎉 Dù thành công hay thất bại, bạn vẫn luôn được nhận lì xì! 🎉
           </p>
         </div>
 
-        {/* CTA Buttons */}
         <div className="space-y-4">
           <button
             onClick={() => navigate('/create')}
-            className="btn-primary w-full text-xl py-4"
+            className="btn-primary w-full text-xl py-4 hover:scale-105 transition-transform"
           >
             🎁 Tạo Lì Xì Thử Thách
           </button>
           
           <button
             onClick={() => {
-              const code = prompt('Nhập mã lì xì của bạn:')
-              if (code) navigate(`/receive/${code}`)
+              const code = prompt('Nhập mã hoặc dán link lì xì của bạn:')
+              if (code) {
+                const match = code.match(/([a-f0-9-]+)$/i)
+                navigate(`/receive/${match ? match[1] : code}`)
+              }
             }}
-            className="btn-secondary w-full text-xl py-4"
+            className="btn-secondary w-full text-xl py-4 hover:scale-105 transition-transform"
           >
             📬 Nhận Lì Xì
           </button>
         </div>
 
-        {/* Footer */}
         <div className="mt-8 text-sm text-gray-500">
-          <p>✨ Chúc Mừng Năm Mới 2026 ✨</p>
+          <p>✨ Chúc Mừng Năm Mới 2026 - Năm Con Ngựa ✨</p>
           <p>Vạn Sự Như Ý - Phát Tài Phát Lộc</p>
         </div>
+
+        <a href="/admin" className="absolute top-4 right-4 text-xs text-gray-400 hover:text-gray-600">
+          Admin
+        </a>
       </div>
     </div>
   )

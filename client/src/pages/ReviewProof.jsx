@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { getLixi, reviewProof } from '../api/lixiApi'
+import Fireworks from '../components/Fireworks'
 
 function ReviewProof() {
   const { id } = useParams()
@@ -67,11 +68,13 @@ function ReviewProof() {
   }
 
   if (decision) {
+    const amount = decision === 'approved' ? (lixiData.successAmount ?? 200000) : (lixiData.failAmount ?? 100000)
     return (
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <div className="card max-w-2xl w-full text-center">
-          <h1 className="text-6xl mb-4">
-            {decision === 'approved' ? '🎉' : '💪'}
+      <div className="min-h-screen flex items-center justify-center p-4 relative">
+        <Fireworks duration={4000} intensity={1.2} />
+        <div className="card max-w-2xl w-full text-center relative z-10">
+          <h1 className="text-6xl mb-4 animate-bounce">
+            {decision === 'approved' ? '🐴' : '💪'}
           </h1>
           <h2 className="text-3xl font-bold text-tet-red mb-4">
             {decision === 'approved' ? 'Đã Duyệt!' : 'Đã Đánh Giá'}
@@ -84,7 +87,7 @@ function ReviewProof() {
             <p className={`text-5xl font-bold mb-2 ${
               decision === 'approved' ? 'text-green-600' : 'text-orange-600'
             }`}>
-              {decision === 'approved' ? '200,000đ' : '100,000đ'}
+              {amount.toLocaleString('vi-VN')}đ
             </p>
             <p className="text-gray-600">
               {decision === 'approved' 
@@ -98,7 +101,7 @@ function ReviewProof() {
             <h3 className="font-bold text-gray-800 mb-3">📱 Hướng dẫn chuyển tiền:</h3>
             <div className="text-left space-y-2 text-gray-700">
               <p>1. Mở app Momo/Banking</p>
-              <p>2. Chuyển khoản {decision === 'approved' ? '200,000đ' : '100,000đ'} cho {lixiData.receiverName}</p>
+              <p>2. Chuyển khoản {amount.toLocaleString('vi-VN')}đ cho {lixiData.receiverName}</p>
               <p>3. Nội dung: "Lì xì Tết 2026"</p>
             </div>
           </div>

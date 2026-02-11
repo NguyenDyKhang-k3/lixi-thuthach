@@ -83,6 +83,98 @@ export const uploadProof = async (lixiId, proof) => {
   return { success: true }
 }
 
+export const getSettings = async () => {
+  if (!API_URL) return { allowPublicCreation: true, successAmount: 200000, failAmount: 100000 }
+  const res = await fetch(`${API_URL}/api/settings`)
+  const json = await res.json()
+  return json.success ? json : { allowPublicCreation: true, successAmount: 200000, failAmount: 100000 }
+}
+
+export const getChallenges = async () => {
+  if (!API_URL) return null
+  const res = await fetch(`${API_URL}/api/challenges`)
+  const json = await res.json()
+  return json.success ? json.challenges : null
+}
+
+export const adminLogin = async (password) => {
+  const res = await fetch(`${API_URL}/api/admin/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password }),
+  })
+  const json = await res.json()
+  if (!json.success) throw new Error(json.error || 'Failed')
+  return json.token
+}
+
+const adminHeaders = (token) => ({
+  'Content-Type': 'application/json',
+  Authorization: `Bearer ${token}`,
+})
+
+export const adminGetStats = async (token) => {
+  const res = await fetch(`${API_URL}/api/admin/stats`, { headers: adminHeaders(token) })
+  const json = await res.json()
+  if (!json.success) throw new Error(json.error || 'Failed')
+  return json
+}
+
+export const adminGetLixis = async (token) => {
+  const res = await fetch(`${API_URL}/api/admin/lixis`, { headers: adminHeaders(token) })
+  const json = await res.json()
+  if (!json.success) throw new Error(json.error || 'Failed')
+  return json.lixis
+}
+
+export const adminGetSettings = async (token) => {
+  const res = await fetch(`${API_URL}/api/admin/settings`, { headers: adminHeaders(token) })
+  const json = await res.json()
+  if (!json.success) throw new Error(json.error || 'Failed')
+  return json.settings
+}
+
+export const adminUpdateSettings = async (token, settings) => {
+  const res = await fetch(`${API_URL}/api/admin/settings`, {
+    method: 'PUT',
+    headers: adminHeaders(token),
+    body: JSON.stringify(settings),
+  })
+  const json = await res.json()
+  if (!json.success) throw new Error(json.error || 'Failed')
+  return json.settings
+}
+
+export const adminGetChallenges = async (token) => {
+  const res = await fetch(`${API_URL}/api/admin/challenges`, { headers: adminHeaders(token) })
+  const json = await res.json()
+  if (!json.success) throw new Error(json.error || 'Failed')
+  return json.challenges
+}
+
+export const adminUpdateChallenges = async (token, challenges) => {
+  const res = await fetch(`${API_URL}/api/admin/challenges`, {
+    method: 'PUT',
+    headers: adminHeaders(token),
+    body: JSON.stringify({ challenges }),
+  })
+  const json = await res.json()
+  if (!json.success) throw new Error(json.error || 'Failed')
+  return json.challenges
+}
+
+export const createLixiWithToken = async (data, token) => {
+  if (!API_URL) throw new Error('API not configured')
+  const res = await fetch(`${API_URL}/api/lixi/create`, {
+    method: 'POST',
+    headers: adminHeaders(token),
+    body: JSON.stringify(data),
+  })
+  const json = await res.json()
+  if (!json.success) throw new Error(json.error || 'Failed')
+  return { lixiId: json.lixiId, link: json.link }
+}
+
 export const reviewProof = async (lixiId, approved) => {
   if (API_URL) {
     const res = await fetch(`${API_URL}/api/lixi/${lixiId}/review`, {

@@ -26,12 +26,21 @@
   }
 }
 
-/* Animation cho pháo hoa */
+/* Animation pháo hoa khi hoàn thành */
 @keyframes firework {
-  0% { transform: scale(0); opacity: 1; }
-  100% { transform: scale(1); opacity: 0; }
+  0% { transform: scale(0) translate(0, 0); opacity: 1; }
+  100% {
+    transform: scale(1.5) translate(var(--tx, 20px), var(--ty, 20px));
+    opacity: 0;
+  }
 }
 
-.firework {
-  animation: firework 1s ease-out infinite;
+.animate-firework {
+  animation: firework 1.2s ease-out forwards;
+}
+
+/* Confetti rơi */
+@keyframes confetti-fall {
+  0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
 }

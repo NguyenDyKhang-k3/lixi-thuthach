@@ -28,14 +28,16 @@
 
 ### ✅ Đã hoàn thành
 
-- [x] Tạo lì xì với thử thách tùy chỉnh
-- [x] 10+ mẫu thử thách có sẵn
+- [x] **Trang Admin** - Quản lý thử thách, người gửi/nhận, số tiền, bật/tắt tạo lì xì
+- [x] **Thử thách theo nhóm** - Trẻ em, Nam, Nữ, Người lớn
+- [x] **Theme Năm Ngựa 2026** - Con ngựa thay rồng
+- [x] **Pháo hoa** - Khi hoàn thành thử thách và khi duyệt
+- [x] Chặn tạo lì xì (Admin tắt = chỉ admin tạo được)
+- [x] Tùy chỉnh số tiền thành công/thất bại qua Admin
 - [x] Upload ảnh/video bằng chứng
 - [x] Review và duyệt bằng chứng
-- [x] UI đẹp mắt với theme Tết
-- [x] Animation pháo hoa, bao lì xì
+- [x] UI đẹp mắt với animation
 - [x] Responsive mobile-first design
-- [x] LocalStorage để lưu trữ tạm
 
 ### 🔜 Sắp ra mắt
 
@@ -101,6 +103,19 @@ npm run dev
 Ứng dụng sẽ mở tại:
 - Frontend: http://localhost:3000
 - Backend: http://localhost:5000
+
+## 🔐 Trang Admin
+
+Truy cập `/admin` để quản lý:
+
+- **Thống kê**: Tổng lì xì, người gửi/nhận, tiền thành công/thất bại
+- **Quản lý thử thách**: Thêm/xóa theo nhóm (Trẻ em, Nam, Nữ, Người lớn)
+- **Quản lý lì xì**: Xem danh sách tất cả lì xì
+- **Cài đặt**: Bật/tắt cho phép mọi người tạo, điều chỉnh số tiền
+
+**Mật khẩu mặc định**: `admin2026` (đổi qua biến môi trường `ADMIN_PASSWORD`)
+
+---
 
 ## 📖 Hướng dẫn sử dụng
 

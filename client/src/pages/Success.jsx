@@ -1,41 +1,15 @@
 import { useNavigate } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import Fireworks from '../components/Fireworks'
 
 function Success() {
   const navigate = useNavigate()
-  const [fireworks, setFireworks] = useState([])
-
-  useEffect(() => {
-    // Tạo pháo hoa
-    const interval = setInterval(() => {
-      const newFirework = {
-        id: Date.now() + Math.random(),
-        left: Math.random() * 100,
-        top: Math.random() * 100,
-      }
-      setFireworks(prev => [...prev, newFirework])
-      
-      setTimeout(() => {
-        setFireworks(prev => prev.filter(f => f.id !== newFirework.id))
-      }, 1000)
-    }, 500)
-
-    return () => clearInterval(interval)
-  }, [])
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Pháo hoa */}
-      {fireworks.map(fw => (
-        <div
-          key={fw.id}
-          className="absolute w-4 h-4 rounded-full bg-tet-gold firework"
-          style={{ left: `${fw.left}%`, top: `${fw.top}%` }}
-        />
-      ))}
+      <Fireworks duration={5000} intensity={1.5} />
 
       <div className="card max-w-2xl w-full text-center relative z-10">
-        <div className="text-8xl mb-6 animate-bounce">🎉</div>
+        <div className="text-8xl mb-6 animate-bounce">🐴</div>
         
         <h1 className="text-4xl md:text-5xl font-bold text-tet-red mb-4">
           Thành Công!
@@ -71,11 +45,10 @@ function Success() {
           </p>
         </div>
 
-        {/* Confetti text */}
         <div className="text-4xl mb-6 space-x-2">
           <span className="inline-block animate-bounce" style={{animationDelay: '0s'}}>🎊</span>
           <span className="inline-block animate-bounce" style={{animationDelay: '0.1s'}}>✨</span>
-          <span className="inline-block animate-bounce" style={{animationDelay: '0.2s'}}>🎉</span>
+          <span className="inline-block animate-bounce" style={{animationDelay: '0.2s'}}>🐴</span>
           <span className="inline-block animate-bounce" style={{animationDelay: '0.3s'}}>💰</span>
           <span className="inline-block animate-bounce" style={{animationDelay: '0.4s'}}>🧧</span>
         </div>

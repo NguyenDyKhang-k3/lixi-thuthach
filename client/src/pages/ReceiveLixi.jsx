@@ -55,9 +55,9 @@ function ReceiveLixi() {
         <div className="max-w-md w-full">
           {/* Bao lì xì */}
           <div className="lixi-envelope animate-float cursor-pointer" onClick={openEnvelope}>
-            {/* Pattern trang trí */}
+            {/* Pattern trang trí - Năm Ngựa 2026 */}
             <div className="absolute top-0 left-0 w-full h-full opacity-10">
-              <div className="text-6xl">🐉🐉🐉</div>
+              <div className="text-6xl">🐴🐴🐴</div>
             </div>
             
             <div className="relative z-10 text-center text-white">
@@ -93,7 +93,7 @@ function ReceiveLixi() {
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="card max-w-2xl w-full">
         <div className="text-center mb-6">
-          <h1 className="text-5xl mb-4">🎉</h1>
+          <h1 className="text-5xl mb-4 animate-bounce">🐴</h1>
           <h2 className="text-3xl font-bold text-tet-red mb-2">
             Bạn Nhận Được Lì Xì!
           </h2>

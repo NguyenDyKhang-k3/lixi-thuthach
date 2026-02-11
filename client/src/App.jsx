@@ -5,6 +5,7 @@ import ReceiveLixi from './pages/ReceiveLixi'
 import UploadProof from './pages/UploadProof'
 import ReviewProof from './pages/ReviewProof'
 import Success from './pages/Success'
+import Admin from './pages/Admin'
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/upload/:id" element={<UploadProof />} />
         <Route path="/review/:id" element={<ReviewProof />} />
         <Route path="/success" element={<Success />} />
+        <Route path="/admin" element={<Admin />} />
       </Routes>
     </div>
   )

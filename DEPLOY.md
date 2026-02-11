@@ -107,6 +107,7 @@ Thêm biến môi trường:
 |-----|-------|
 | `NODE_ENV` | `production` |
 | `FRONTEND_URL` | `https://YOUR-VERCEL-URL.vercel.app` *(paste URL Vercel từ bước 2)* |
+| `ADMIN_PASSWORD` | Mật khẩu admin (mặc định: `admin2026`) |
 
 ### 3.3 Deploy
 
