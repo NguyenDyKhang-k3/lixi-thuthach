@@ -20,4 +20,8 @@ services:
       - key: NODE_ENV
         value: production
       - key: FRONTEND_URL
-        sync: false  # Sẽ cấu hình sau khi có URL Vercel
+        value: https://your-frontend-url.vercel.app  # Thay bằng URL Vercel thực tế
+      - key: ADMIN_PASSWORD
+        value: admin2026  # Mật khẩu admin (nên đổi)
+      - key: PORT
+        value: 10000
