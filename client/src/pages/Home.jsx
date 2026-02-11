@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
+import { APP_VERSION } from '../config/version'
 
 function Home() {
   const navigate = useNavigate()
@@ -156,6 +157,7 @@ function Home() {
         <div className="mt-8 text-sm text-gray-500">
           <p>✨ Chúc Mừng Năm Mới 2026 - Năm Con Ngựa ✨</p>
           <p>Vạn Sự Như Ý - Phát Tài Phát Lộc</p>
+          <p className="text-xs text-gray-400 mt-2">v{APP_VERSION}</p>
         </div>
 
         <a href="/admin" className="absolute top-4 right-4 text-xs text-gray-400 hover:text-gray-600">
