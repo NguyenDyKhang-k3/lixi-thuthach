@@ -20,7 +20,7 @@ services:
       - key: NODE_ENV
         value: production
       - key: FRONTEND_URL
-        value: https://lixi-thuthach-five.vercel.app
+        value: https://lixi-blush.vercel.app
       - key: ADMIN_PASSWORD
         value: Khang2026
       - key: PORT
