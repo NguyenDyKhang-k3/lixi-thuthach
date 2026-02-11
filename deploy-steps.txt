@@ -1,0 +1,61 @@
+═══════════════════════════════════════════════════════════════
+  🚀 DEPLOY LÌ XÌ THỬ THÁCH - CÁC BƯỚC NHANH
+═══════════════════════════════════════════════════════════════
+
+▶ BƯỚC 1: ĐẨY CODE LÊN GITHUB
+─────────────────────────────────────────────────────────────
+1. Tạo repo mới tại: https://github.com/new
+   - Tên: lixi-thuthach
+   - Public
+   - KHÔNG thêm README
+
+2. Chạy trong terminal (thư mục lixi-thuthach):
+   
+   git init
+   git add .
+   git commit -m "Initial commit"
+   git branch -M main
+   git remote add origin https://github.com/TEN_CUA_BAN/lixi-thuthach.git
+   git push -u origin main
+
+   (Thay TEN_CUA_BAN bằng username GitHub của bạn)
+
+
+▶ BƯỚC 2: VERCEL (Frontend) - 2 phút
+─────────────────────────────────────────────────────────────
+1. Vào: https://vercel.com/new
+2. Import repository: lixi-thuthach
+3. Root Directory: client  ← QUAN TRỌNG!
+4. Deploy
+5. COPY URL (vd: https://lixi-thuthach-xxx.vercel.app)
+
+
+▶ BƯỚC 3: RENDER (Backend) - 3 phút
+─────────────────────────────────────────────────────────────
+1. Vào: https://dashboard.render.com
+2. New + → Web Service
+3. Connect: lixi-thuthach
+4. Cấu hình:
+   - Root Directory: server
+   - Build: npm install
+   - Start: npm start
+   - Instance: Free
+5. Environment Variables:
+   - FRONTEND_URL = (URL Vercel từ bước 2)
+6. Create Web Service
+7. COPY URL (vd: https://lixi-thuthach-api.onrender.com)
+
+
+▶ BƯỚC 4: KẾT NỐI
+─────────────────────────────────────────────────────────────
+1. Vercel → Settings → Environment Variables
+   Thêm: VITE_API_URL = (URL Render từ bước 3)
+
+2. Redeploy lại project trên Vercel
+
+
+▶ XONG! 
+─────────────────────────────────────────────────────────────
+Mở URL Vercel và test thử! 🎉
+
+Chi tiết đầy đủ: xem file DEPLOY.md

@@ -1,0 +1,23 @@
+# Render.com Blueprint - Backend API
+# https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: lixi-thuthach-api
+    runtime: node
+    
+    # Root directory - chỉ deploy folder server
+    rootDir: server
+    
+    # Build command
+    buildCommand: npm install
+    
+    # Start command
+    startCommand: npm start
+    
+    # Environment variables
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: FRONTEND_URL
+        sync: false  # Sẽ cấu hình sau khi có URL Vercel

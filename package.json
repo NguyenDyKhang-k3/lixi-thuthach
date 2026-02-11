@@ -1,0 +1,18 @@
+{
+  "name": "lixi-thuthach",
+  "version": "1.0.0",
+  "description": "Ứng dụng gửi lì xì kèm thử thách vui nhộn",
+  "scripts": {
+    "install-all": "cd client && npm install && cd ../server && npm install",
+    "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
+    "dev:client": "cd client && npm run dev",
+    "dev:server": "cd server && npm run dev",
+    "build": "cd client && npm run build"
+  },
+  "keywords": ["lixi", "tet", "challenge", "vietnamese", "new-year"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
