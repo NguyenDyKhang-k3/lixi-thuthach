@@ -7,7 +7,7 @@ const API_URL = import.meta.env.VITE_API_URL || ''
 
 function CreateLixi() {
   const navigate = useNavigate()
-  const adminToken = localStorage.getItem('adminToken')
+  const [adminToken, setAdminToken] = useState(() => localStorage.getItem('adminToken'))
   const [settings, setSettings] = useState(null)
   const [challenges, setChallenges] = useState(challengesByGroup)
   const [targetGroup, setTargetGroup] = useState('tre_em')
@@ -21,7 +21,15 @@ function CreateLixi() {
   })
   const [loading, setLoading] = useState(false)
   const [generatedLink, setGeneratedLink] = useState('')
-  const [locked, setLocked] = useState(false)
+
+  // Chỉ admin (có token) mới được tạo. Kiểm tra mỗi lần mount và khi storage thay đổi.
+  const isAdmin = !!adminToken
+  const locked = !isAdmin
+
+  useEffect(() => {
+    const token = localStorage.getItem('adminToken')
+    setAdminToken(token)
+  }, [])
 
   useEffect(() => {
     const load = async () => {
@@ -30,18 +38,15 @@ function CreateLixi() {
           const [s, c] = await Promise.all([getSettings(), getChallenges()])
           setSettings(s)
           if (c) setChallenges(c)
-          if (!s?.allowPublicCreation && !adminToken) setLocked(true)
         } catch {
-          const def = { allowPublicCreation: false, successAmount: 200000, failAmount: 100000 }
-          setSettings(def)
-          if (!adminToken) setLocked(true)
+          setSettings({ allowPublicCreation: false, successAmount: 200000, failAmount: 100000 })
         }
       } else {
-        setSettings({ allowPublicCreation: true, successAmount: 200000, failAmount: 100000 })
+        setSettings({ allowPublicCreation: false, successAmount: 200000, failAmount: 100000 })
       }
     }
     load()
-  }, [adminToken])
+  }, [])
 
   const handleSubmit = async (e) => {
     e.preventDefault()

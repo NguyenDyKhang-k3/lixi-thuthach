@@ -87,11 +87,12 @@ app.get('/api/challenges', (req, res) => {
   res.json({ success: true, challenges: challengesDatabase })
 })
 
-// Tạo lì xì mới
+// Tạo lì xì mới - CHỈ admin (có token) HOẶC khi allowPublicCreation bật
 app.post('/api/lixi/create', (req, res) => {
   try {
-    if (!settings.allowPublicCreation) {
-      return res.status(403).json({ error: 'Tạo lì xì đã bị tạm khóa. Liên hệ admin.' })
+    const isAdmin = req.headers.authorization === `Bearer ${ADMIN_PASSWORD}`
+    if (!isAdmin && !settings.allowPublicCreation) {
+      return res.status(403).json({ error: 'Chỉ admin mới có quyền tạo lì xì. Vui lòng đăng nhập Admin.' })
     }
 
     const { senderName, receiverName, challenge, message, deadline } = req.body

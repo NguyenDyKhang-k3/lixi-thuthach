@@ -3,7 +3,12 @@ import { useState, useEffect } from 'react'
 
 function Home() {
   const navigate = useNavigate()
+  const [isAdmin, setIsAdmin] = useState(() => !!localStorage.getItem('adminToken'))
   const [stars, setStars] = useState([])
+
+  useEffect(() => {
+    setIsAdmin(!!localStorage.getItem('adminToken'))
+  }, [])
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -84,12 +89,21 @@ function Home() {
         </div>
 
         <div className="space-y-4">
-          <button
-            onClick={() => navigate('/create')}
-            className="btn-primary w-full text-xl py-4 hover:scale-105 transition-transform"
-          >
-            🎁 Tạo Lì Xì Thử Thách
-          </button>
+          {isAdmin ? (
+            <button
+              onClick={() => navigate('/create')}
+              className="btn-primary w-full text-xl py-4 hover:scale-105 transition-transform"
+            >
+              🎁 Tạo Lì Xì Thử Thách
+            </button>
+          ) : (
+            <button
+              onClick={() => navigate('/admin')}
+              className="btn-secondary w-full text-xl py-4 hover:scale-105 transition-transform border-2 border-amber-500"
+            >
+              🔐 Đăng nhập Admin để tạo lì xì
+            </button>
+          )}
           
           <button
             onClick={() => {

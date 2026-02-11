@@ -171,14 +171,19 @@ function Admin() {
 
   return (
     <div className="min-h-screen bg-slate-900 text-white">
-      <header className="bg-slate-800 border-b border-slate-700 px-4 py-3 flex justify-between items-center">
+      <header className="bg-slate-800 border-b border-slate-700 px-4 py-3 flex justify-between items-center flex-wrap gap-2">
         <div className="flex items-center gap-2">
           <span className="text-2xl">🐴</span>
           <h1 className="text-xl font-bold">Admin - Lì Xì Thử Thách</h1>
         </div>
-        <button onClick={handleLogout} className="px-4 py-2 bg-red-600/50 hover:bg-red-600 rounded-lg text-sm">
-          Đăng xuất
-        </button>
+        <div className="flex items-center gap-2">
+          <button onClick={() => navigate('/create')} className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold rounded-lg text-sm">
+            🎁 Tạo Lì Xì
+          </button>
+          <button onClick={handleLogout} className="px-4 py-2 bg-red-600/50 hover:bg-red-600 rounded-lg text-sm">
+            Đăng xuất
+          </button>
+        </div>
       </header>
 
       <div className="flex border-b border-slate-700 overflow-x-auto">
