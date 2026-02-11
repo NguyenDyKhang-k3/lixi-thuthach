@@ -263,7 +263,10 @@ app.delete('/api/admin/challenges/:group/:id', verifyAdmin, (req, res) => {
   res.json({ success: true })
 })
 
-</think>
-Đang sửa route create để hỗ trợ admin bypass:
-<｜tool▁calls▁begin｜><｜tool▁call▁begin｜>
-StrReplace
+// Start server
+app.listen(PORT, () => {
+  console.log(`✨ Lì Xì Thử Thách Server running on port ${PORT}`)
+  console.log(`📍 API: http://localhost:${PORT}/api/health`)
+  console.log(`🌐 FRONTEND_URL: ${FRONTEND_URL}`)
+  console.log(`🔐 ADMIN_PASSWORD: ${ADMIN_PASSWORD ? '***' : 'NOT SET'}`)
+})
