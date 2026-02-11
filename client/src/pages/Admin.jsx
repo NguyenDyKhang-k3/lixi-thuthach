@@ -114,9 +114,19 @@ function Admin() {
   if (!API_URL) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white p-4">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">⚠️ Admin không khả dụng</h1>
-          <p className="mb-4">Trang admin chỉ hoạt động khi đã deploy và cấu hình VITE_API_URL.</p>
+        <div className="max-w-lg text-center">
+          <h1 className="text-2xl font-bold mb-4">⚠️ Cần cấu hình API</h1>
+          <p className="mb-4 text-left bg-gray-800 p-4 rounded-lg">
+            Trang Admin cần URL Backend (Render). Thêm biến môi trường trên Vercel:
+          </p>
+          <div className="text-left bg-gray-800 p-4 rounded-lg mb-4 font-mono text-sm">
+            <p className="text-amber-400">VITE_API_URL</p>
+            <p>= https://lixi-thuthach-api.onrender.com</p>
+            <p className="text-gray-500 mt-2">(hoặc URL Render của bạn)</p>
+          </div>
+          <p className="text-sm text-gray-400 mb-4">
+            Vercel → Project → Settings → Environment Variables → Add
+          </p>
           <button onClick={() => navigate('/')} className="btn-primary">Về Trang Chủ</button>
         </div>
       </div>
