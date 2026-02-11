@@ -15,7 +15,7 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }))
 // Storage
 let lixisDatabase = {}
 let settings = {
-  allowPublicCreation: true,
+  allowPublicCreation: false,  // Mặc định: chỉ admin mới tạo được. Bật trong Admin nếu muốn mọi người tạo.
   successAmount: 200000,
   failAmount: 100000,
 }

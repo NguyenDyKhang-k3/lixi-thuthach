@@ -32,7 +32,9 @@ function CreateLixi() {
           if (c) setChallenges(c)
           if (!s?.allowPublicCreation && !adminToken) setLocked(true)
         } catch {
-          setSettings({ allowPublicCreation: true, successAmount: 200000, failAmount: 100000 })
+          const def = { allowPublicCreation: false, successAmount: 200000, failAmount: 100000 }
+          setSettings(def)
+          if (!adminToken) setLocked(true)
         }
       } else {
         setSettings({ allowPublicCreation: true, successAmount: 200000, failAmount: 100000 })

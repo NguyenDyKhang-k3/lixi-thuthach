@@ -84,10 +84,10 @@ export const uploadProof = async (lixiId, proof) => {
 }
 
 export const getSettings = async () => {
-  if (!API_URL) return { allowPublicCreation: true, successAmount: 200000, failAmount: 100000 }
+  if (!API_URL) return { allowPublicCreation: false, successAmount: 200000, failAmount: 100000 }
   const res = await fetch(`${API_URL}/api/settings`)
   const json = await res.json()
-  return json.success ? json : { allowPublicCreation: true, successAmount: 200000, failAmount: 100000 }
+  return json.success ? json : { allowPublicCreation: false, successAmount: 200000, failAmount: 100000 }
 }
 
 export const getChallenges = async () => {
