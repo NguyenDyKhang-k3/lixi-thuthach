@@ -8,8 +8,10 @@ import {
   adminUpdateSettings,
   adminGetChallenges,
   adminUpdateChallenges,
+  reviewProof,
 } from '../api/lixiApi'
 import { TARGET_GROUPS } from '../data/challenges'
+import { AlertModal, ConfirmModal, PromptModal } from '../components/Modal'
 
 const API_URL = import.meta.env.VITE_API_URL || ''
 
@@ -24,6 +26,10 @@ function Admin() {
   const [settings, setSettings] = useState(null)
   const [challenges, setChallenges] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [alertModal, setAlertModal] = useState({ isOpen: false, title: '', message: '', type: 'info' })
+  const [confirmModal, setConfirmModal] = useState({ isOpen: false, title: '', message: '', onConfirm: () => {} })
+  const [promptModal, setPromptModal] = useState({ isOpen: false, title: '', message: '', onSubmit: () => {}, placeholder: '', defaultValue: '' })
+  const [detailModal, setDetailModal] = useState({ isOpen: false, lixi: null })
 
   useEffect(() => {
     if (!API_URL) {
@@ -78,37 +84,74 @@ function Admin() {
   const handleSaveSettings = async () => {
     try {
       await adminUpdateSettings(token, settings)
-      alert('Đã lưu cài đặt!')
+      setAlertModal({ isOpen: true, title: 'Thành công', message: 'Đã lưu cài đặt!', type: 'success' })
     } catch (e) {
-      alert('Lỗi: ' + e.message)
+      setAlertModal({ isOpen: true, title: 'Lỗi', message: e.message, type: 'error' })
     }
   }
 
   const handleSaveChallenges = async () => {
     try {
       await adminUpdateChallenges(token, challenges)
-      alert('Đã lưu thử thách!')
+      setAlertModal({ isOpen: true, title: 'Thành công', message: 'Đã lưu thử thách!', type: 'success' })
     } catch (e) {
-      alert('Lỗi: ' + e.message)
+      setAlertModal({ isOpen: true, title: 'Lỗi', message: e.message, type: 'error' })
     }
   }
 
   const addChallenge = (group) => {
-    const text = prompt('Nhập nội dung thử thách:')
-    if (!text) return
-    const newCh = { id: Date.now().toString().slice(-6), emoji: '🎯', text, difficulty: 'medium', targetGroup: group }
-    setChallenges(prev => ({
-      ...prev,
-      [group]: [...(prev[group] || []), newCh],
-    }))
+    setPromptModal({
+      isOpen: true,
+      title: 'Thêm thử thách',
+      message: 'Nhập nội dung thử thách mới:',
+      placeholder: 'VD: Chụp ảnh với 10 người chúc Tết',
+      defaultValue: '',
+      onSubmit: (text) => {
+        const newCh = { id: Date.now().toString().slice(-6), emoji: '🎯', text, difficulty: 'medium', targetGroup: group }
+        setChallenges(prev => ({
+          ...prev,
+          [group]: [...(prev[group] || []), newCh],
+        }))
+      }
+    })
   }
 
   const removeChallenge = (group, id) => {
-    if (!confirm('Xóa thử thách này?')) return
-    setChallenges(prev => ({
-      ...prev,
-      [group]: (prev[group] || []).filter(c => c.id !== id),
-    }))
+    setConfirmModal({
+      isOpen: true,
+      title: 'Xác nhận xóa',
+      message: 'Bạn có chắc chắn muốn xóa thử thách này?',
+      onConfirm: () => {
+        setChallenges(prev => ({
+          ...prev,
+          [group]: (prev[group] || []).filter(c => c.id !== id),
+        }))
+      }
+    })
+  }
+
+  const openDetailModal = (lixi) => {
+    setDetailModal({ isOpen: true, lixi })
+  }
+
+  const closeDetailModal = () => {
+    setDetailModal({ isOpen: false, lixi: null })
+  }
+
+  const handleApproveProof = async (lixiId, approved) => {
+    try {
+      await reviewProof(lixiId, approved)
+      setAlertModal({
+        isOpen: true,
+        title: 'Thành công',
+        message: approved ? 'Đã duyệt hoàn thành!' : 'Đã đánh giá!',
+        type: 'success'
+      })
+      closeDetailModal()
+      await loadData()
+    } catch (e) {
+      setAlertModal({ isOpen: true, title: 'Lỗi', message: e.message, type: 'error' })
+    }
   }
 
   if (!API_URL) {

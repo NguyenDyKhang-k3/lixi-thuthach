@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { QRCodeSVG } from 'qrcode.react'
 import { TARGET_GROUPS, challengesByGroup } from '../data/challenges'
 import { createLixi, createLixiWithToken, getSettings, getChallenges } from '../api/lixiApi'
+import { AlertModal } from '../components/Modal'
 
 const API_URL = import.meta.env.VITE_API_URL || ''
 
@@ -11,7 +12,7 @@ function CreateLixi() {
   const [adminToken, setAdminToken] = useState(() => localStorage.getItem('adminToken'))
   const [settings, setSettings] = useState(null)
   const [challenges, setChallenges] = useState(challengesByGroup)
-  const [targetGroup, setTargetGroup] = useState('tre_em')
+  const [targetGroup, setTargetGroup] = useState('nam')
   const [formData, setFormData] = useState({
     senderName: '',
     receiverName: '',
@@ -22,6 +23,7 @@ function CreateLixi() {
   })
   const [loading, setLoading] = useState(false)
   const [generatedLink, setGeneratedLink] = useState('')
+  const [alertModal, setAlertModal] = useState({ isOpen: false, title: '', message: '', type: 'info' })
 
   // Chỉ admin (có token) mới được tạo. Kiểm tra mỗi lần mount và khi storage thay đổi.
   const isAdmin = !!adminToken
@@ -68,7 +70,12 @@ function CreateLixi() {
         : await createLixi(data)
       setGeneratedLink(result.link)
     } catch (error) {
-      alert(error.message || 'Có lỗi xảy ra. Vui lòng thử lại!')
+      setAlertModal({
+        isOpen: true,
+        title: 'Lỗi',
+        message: error.message || 'Có lỗi xảy ra. Vui lòng thử lại!',
+        type: 'error'
+      })
       console.error(error)
     } finally {
       setLoading(false)
@@ -77,7 +84,12 @@ function CreateLixi() {
 
   const copyLink = () => {
     navigator.clipboard.writeText(generatedLink)
-    alert('Đã copy link! Gửi cho người nhận nhé!')
+    setAlertModal({
+      isOpen: true,
+      title: 'Thành công',
+      message: 'Đã copy link! Gửi cho người nhận nhé!',
+      type: 'success'
+    })
   }
 
   const currentChallenges = challenges[targetGroup] || []
@@ -104,8 +116,16 @@ function CreateLixi() {
 
   if (generatedLink) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <div className="card max-w-2xl w-full text-center">
+      <>
+        <AlertModal
+          isOpen={alertModal.isOpen}
+          onClose={() => setAlertModal({ ...alertModal, isOpen: false })}
+          title={alertModal.title}
+          message={alertModal.message}
+          type={alertModal.type}
+        />
+        <div className="min-h-screen flex items-center justify-center p-4">
+          <div className="card max-w-2xl w-full text-center">
           <div className="text-5xl mb-4 animate-bounce">🐴</div>
           <h2 className="text-3xl font-bold text-tet-red mb-4">Lì Xì Đã Được Tạo!</h2>
           
@@ -147,8 +167,16 @@ function CreateLixi() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="card max-w-2xl w-full">
+    <>
+      <AlertModal
+        isOpen={alertModal.isOpen}
+        onClose={() => setAlertModal({ ...alertModal, isOpen: false })}
+        title={alertModal.title}
+        message={alertModal.message}
+        type={alertModal.type}
+      />
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <div className="card max-w-2xl w-full">
         <button onClick={() => navigate('/')} className="text-gray-600 hover:text-gray-800 mb-4">← Quay lại</button>
 
         <div className="flex items-center gap-3 mb-6">
@@ -289,6 +317,7 @@ function CreateLixi() {
         </form>
       </div>
     </div>
+    </>
   )
 }
 

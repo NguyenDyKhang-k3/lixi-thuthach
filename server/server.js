@@ -20,15 +20,6 @@ let settings = {
   failAmount: 100000,
 }
 let challengesDatabase = {
-  tre_em: [
-    { id: 'te1', emoji: '🎨', text: 'Vẽ tranh con ngựa hoặc chủ đề Tết', difficulty: 'easy', targetGroup: 'tre_em' },
-    { id: 'te2', emoji: '🎤', text: 'Hát 1 bài hát về Tết và quay lại', difficulty: 'easy', targetGroup: 'tre_em' },
-    { id: 'te3', emoji: '📸', text: 'Chụp ảnh với 3 người chúc "Chúc mừng năm mới"', difficulty: 'easy', targetGroup: 'tre_em' },
-    { id: 'te4', emoji: '🧹', text: 'Dọn dẹp góc học tập của mình', difficulty: 'easy', targetGroup: 'tre_em' },
-    { id: 'te5', emoji: '📖', text: 'Học thuộc 1 bài thơ về Tết (4 câu)', difficulty: 'medium', targetGroup: 'tre_em' },
-    { id: 'te6', emoji: '✂️', text: 'Gấp origami con ngựa hoặc hoa mai', difficulty: 'medium', targetGroup: 'tre_em' },
-    { id: 'te7', emoji: '🎁', text: 'Tặng quà cho ông bà và chụp ảnh', difficulty: 'easy', targetGroup: 'tre_em' },
-  ],
   nam: [
     { id: 'n1', emoji: '🏃', text: 'Chạy bộ 5km', difficulty: 'medium', targetGroup: 'nam' },
     { id: 'n2', emoji: '💪', text: 'Tập 100 cái squat', difficulty: 'medium', targetGroup: 'nam' },
@@ -37,6 +28,8 @@ let challengesDatabase = {
     { id: 'n5', emoji: '📞', text: 'Gọi điện cho 3 người thân chúc Tết', difficulty: 'easy', targetGroup: 'nam' },
     { id: 'n6', emoji: '🎬', text: 'Làm video TikTok/Reels về Tết', difficulty: 'medium', targetGroup: 'nam' },
     { id: 'n7', emoji: '🌏', text: 'Làm video chúc Tết bằng 3 thứ tiếng', difficulty: 'hard', targetGroup: 'nam' },
+    { id: 'n8', emoji: '🎨', text: 'Vẽ tranh con ngựa hoặc chủ đề Tết', difficulty: 'easy', targetGroup: 'nam' },
+    { id: 'n9', emoji: '🎁', text: 'Tặng quà cho ông bà và chụp ảnh', difficulty: 'easy', targetGroup: 'nam' },
   ],
   nu: [
     { id: 'nu1', emoji: '🍜', text: 'Nấu 3 món ăn Tết truyền thống', difficulty: 'medium', targetGroup: 'nu' },
@@ -46,14 +39,8 @@ let challengesDatabase = {
     { id: 'nu5', emoji: '📸', text: 'Chụp ảnh với 5 người chúc Tết', difficulty: 'easy', targetGroup: 'nu' },
     { id: 'nu6', emoji: '🧹', text: 'Dọn dẹp nhà cửa và chụp ảnh trước/sau', difficulty: 'medium', targetGroup: 'nu' },
     { id: 'nu7', emoji: '📖', text: 'Học và giải thích ý nghĩa 3 phong tục Tết', difficulty: 'medium', targetGroup: 'nu' },
-  ],
-  nguoi_lon: [
-    { id: 'nl1', emoji: '📞', text: 'Gọi điện cho 5 người thân chúc Tết', difficulty: 'easy', targetGroup: 'nguoi_lon' },
-    { id: 'nl2', emoji: '💝', text: 'Tặng quà/lì xì cho người khó khăn', difficulty: 'medium', targetGroup: 'nguoi_lon' },
-    { id: 'nl3', emoji: '📖', text: 'Học và giải thích ý nghĩa con ngựa trong văn hóa', difficulty: 'medium', targetGroup: 'nguoi_lon' },
-    { id: 'nl4', emoji: '🍜', text: 'Nấu mâm cơm Tết đầy đủ', difficulty: 'hard', targetGroup: 'nguoi_lon' },
-    { id: 'nl5', emoji: '🧹', text: 'Dọn dẹp và trang trí toàn bộ nhà cửa', difficulty: 'medium', targetGroup: 'nguoi_lon' },
-    { id: 'nl6', emoji: '🎁', text: 'Tổ chức quây quần gia đình và chụp ảnh', difficulty: 'easy', targetGroup: 'nguoi_lon' },
+    { id: 'nu8', emoji: '🎤', text: 'Hát 1 bài hát về Tết và quay lại', difficulty: 'easy', targetGroup: 'nu' },
+    { id: 'nu9', emoji: '🎁', text: 'Tổ chức quây quần gia đình và chụp ảnh', difficulty: 'easy', targetGroup: 'nu' },
   ],
 }
 
