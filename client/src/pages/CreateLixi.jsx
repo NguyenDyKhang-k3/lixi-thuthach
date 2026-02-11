@@ -23,6 +23,8 @@ function CreateLixi() {
   })
   const [loading, setLoading] = useState(false)
   const [generatedLink, setGeneratedLink] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
+  const [showCopySuccess, setShowCopySuccess] = useState(false)
   const [alertModal, setAlertModal] = useState({ isOpen: false, title: '', message: '', type: 'info' })
 
   // Chỉ admin (có token) mới được tạo. Kiểm tra mỗi lần mount và khi storage thay đổi.
@@ -148,7 +150,14 @@ function CreateLixi() {
 
           {/* Buttons */}
           <div className="space-y-3">
-            <button onClick={copyLink} className="btn-primary w-full">📋 Copy Link</button>
+            <button onClick={copyLink} className="btn-primary w-full relative">
+              📋 Copy Link
+              {showCopySuccess && (
+                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm bg-green-500 text-white px-3 py-1 rounded-full animate-fadeIn">
+                  ✓ Đã copy!
+                </span>
+              )}
+            </button>
             <button onClick={() => navigate('/')} className="btn-secondary w-full">🏠 Về Trang Chủ</button>
           </div>
 

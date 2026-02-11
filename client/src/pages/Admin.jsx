@@ -223,7 +223,38 @@ function Admin() {
   ]
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white">
+    <>
+      <AlertModal
+        isOpen={alertModal.isOpen}
+        onClose={() => setAlertModal({ ...alertModal, isOpen: false })}
+        title={alertModal.title}
+        message={alertModal.message}
+        type={alertModal.type}
+      />
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        onClose={() => setConfirmModal({ ...confirmModal, isOpen: false })}
+        onConfirm={confirmModal.onConfirm}
+        title={confirmModal.title}
+        message={confirmModal.message}
+      />
+      <PromptModal
+        isOpen={promptModal.isOpen}
+        onClose={() => setPromptModal({ ...promptModal, isOpen: false })}
+        onSubmit={promptModal.onSubmit}
+        title={promptModal.title}
+        message={promptModal.message}
+        placeholder={promptModal.placeholder}
+        defaultValue={promptModal.defaultValue}
+      />
+      {detailModal.isOpen && detailModal.lixi && (
+        <DetailModal
+          lixi={detailModal.lixi}
+          onClose={closeDetailModal}
+          onApprove={handleApproveProof}
+        />
+      )}
+      <div className="min-h-screen bg-slate-900 text-white">
       <header className="bg-slate-800 border-b border-slate-700 px-4 py-3 flex justify-between items-center flex-wrap gap-2">
         <div className="flex items-center gap-2">
           <span className="text-2xl">🐴</span>
@@ -311,18 +342,33 @@ function Admin() {
               <p className="text-slate-500">Chưa có lì xì nào</p>
             ) : (
               lixis.map((l) => (
-                <div key={l.id} className="bg-slate-800 rounded-lg p-4 border border-slate-700 flex flex-wrap gap-2 items-center justify-between">
-                  <div>
-                    <p><span className="text-amber-400">{l.senderName}</span> → <span className="text-green-400">{l.receiverName}</span></p>
-                    <p className="text-sm text-slate-400">{l.challenge?.slice(0, 50)}...</p>
-                    <p className="text-xs text-slate-500">{new Date(l.createdAt).toLocaleString('vi-VN')}</p>
+                <div key={l.id} className="bg-slate-800 rounded-lg p-4 border border-slate-700">
+                  <div className="flex flex-wrap gap-2 items-center justify-between">
+                    <div className="flex-1">
+                      <p><span className="text-amber-400">{l.senderName}</span> → <span className="text-green-400">{l.receiverName}</span></p>
+                      <p className="text-sm text-slate-400">{l.challenge?.slice(0, 50)}...</p>
+                      <p className="text-xs text-slate-500">{new Date(l.createdAt).toLocaleString('vi-VN')}</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className={`px-3 py-1 rounded text-xs font-semibold ${
+                        l.status === 'completed' 
+                          ? l.proof?.status === 'approved' 
+                            ? 'bg-green-500/20 text-green-300' 
+                            : 'bg-orange-500/20 text-orange-300'
+                          : 'bg-amber-500/20 text-amber-300'
+                      }`}>
+                        {l.status === 'completed' 
+                          ? l.proof?.status === 'approved' ? '✅ Thành công' : '💪 Thử lại'
+                          : '⏳ Chờ'}
+                      </span>
+                      <button
+                        onClick={() => openDetailModal(l)}
+                        className="px-3 py-1 bg-blue-500/30 hover:bg-blue-500/50 rounded text-sm transition-colors"
+                      >
+                        Chi tiết
+                      </button>
+                    </div>
                   </div>
-                  <span className={`px-2 py-1 rounded text-xs ${l.status === 'completed' ? 'bg-green-500/20' : 'bg-amber-500/20'}`}>
-                    {l.status}
-                  </span>
-                  <a href={`/review/${l.id}`} target="_blank" rel="noopener noreferrer" className="text-amber-400 hover:underline text-sm">
-                    Xem
-                  </a>
                 </div>
               ))
             )}
@@ -397,6 +443,164 @@ function Admin() {
             </button>
           </div>
         )}
+      </div>
+    </div>
+    </>
+  )
+}
+
+function DetailModal({ lixi, onClose, onApprove }) {
+  useEffect(() => {
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [])
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm overflow-y-auto">
+      <div className="bg-slate-800 rounded-2xl shadow-2xl max-w-3xl w-full my-8 border border-slate-600">
+        <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-6 rounded-t-2xl flex justify-between items-center">
+          <h3 className="text-2xl font-bold text-white">Chi Tiết Lì Xì</h3>
+          <button
+            onClick={onClose}
+            className="text-white hover:text-gray-200 text-3xl leading-none"
+          >
+            ×
+          </button>
+        </div>
+        
+        <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+          {/* Thông tin cơ bản */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-slate-700/50 rounded-lg p-4">
+              <p className="text-slate-400 text-sm mb-1">Người gửi</p>
+              <p className="text-amber-400 font-bold text-lg">{lixi.senderName}</p>
+            </div>
+            <div className="bg-slate-700/50 rounded-lg p-4">
+              <p className="text-slate-400 text-sm mb-1">Người nhận</p>
+              <p className="text-green-400 font-bold text-lg">{lixi.receiverName}</p>
+            </div>
+          </div>
+
+          {/* Thử thách */}
+          <div className="bg-amber-500/10 border-2 border-amber-500/30 rounded-lg p-4">
+            <p className="text-amber-400 font-bold mb-2">🎯 Thử thách:</p>
+            <p className="text-white text-lg">{lixi.challenge}</p>
+          </div>
+
+          {/* Lời chúc */}
+          {lixi.message && (
+            <div className="bg-slate-700/50 rounded-lg p-4">
+              <p className="text-slate-400 text-sm mb-2">💌 Lời chúc:</p>
+              <p className="text-white italic">"{lixi.message}"</p>
+            </div>
+          )}
+
+          {/* Thời gian */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-slate-700/50 rounded-lg p-3">
+              <p className="text-slate-400 text-xs mb-1">Tạo lúc</p>
+              <p className="text-white text-sm">{new Date(lixi.createdAt).toLocaleString('vi-VN')}</p>
+            </div>
+            <div className="bg-slate-700/50 rounded-lg p-3">
+              <p className="text-slate-400 text-xs mb-1">Thời hạn</p>
+              <p className="text-white text-sm">{lixi.deadline} ngày</p>
+            </div>
+          </div>
+
+          {/* Bằng chứng */}
+          {lixi.proof ? (
+            <div className="bg-slate-700/50 rounded-lg p-4 space-y-4">
+              <div>
+                <p className="text-slate-400 text-sm mb-2">📸 Bằng chứng:</p>
+                {lixi.proof.type === 'image' ? (
+                  <img 
+                    src={lixi.proof.url} 
+                    alt="Proof" 
+                    className="w-full rounded-lg shadow-lg"
+                  />
+                ) : (
+                  <video 
+                    src={lixi.proof.url} 
+                    controls 
+                    className="w-full rounded-lg shadow-lg"
+                  />
+                )}
+              </div>
+              
+              {lixi.proof.description && (
+                <div>
+                  <p className="text-slate-400 text-sm mb-1">📝 Mô tả:</p>
+                  <p className="text-white">{lixi.proof.description}</p>
+                </div>
+              )}
+
+              <div className="text-xs text-slate-500">
+                Upload lúc: {new Date(lixi.proof.uploadedAt).toLocaleString('vi-VN')}
+              </div>
+
+              {/* Nút duyệt */}
+              {lixi.proof.status === 'pending' && (
+                <div className="bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-lg p-4">
+                  <p className="text-white font-bold mb-3 text-center">💭 Đánh giá hoàn thành?</p>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      onClick={() => onApprove(lixi.id, true)}
+                      className="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-lg transform hover:scale-105 transition-all"
+                    >
+                      <div className="text-2xl mb-1">✅</div>
+                      <div className="text-sm">Thành công</div>
+                      <div className="text-lg font-bold">{(lixi.successAmount || 200000).toLocaleString('vi-VN')}đ</div>
+                    </button>
+                    <button
+                      onClick={() => onApprove(lixi.id, false)}
+                      className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-4 rounded-lg transform hover:scale-105 transition-all"
+                    >
+                      <div className="text-2xl mb-1">💪</div>
+                      <div className="text-sm">Cố gắng hơn</div>
+                      <div className="text-lg font-bold">{(lixi.failAmount || 100000).toLocaleString('vi-VN')}đ</div>
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Đã duyệt */}
+              {lixi.proof.status !== 'pending' && (
+                <div className={`rounded-lg p-4 text-center ${
+                  lixi.proof.status === 'approved' 
+                    ? 'bg-green-500/20 border border-green-500/50' 
+                    : 'bg-orange-500/20 border border-orange-500/50'
+                }`}>
+                  <div className="text-4xl mb-2">{lixi.proof.status === 'approved' ? '✅' : '💪'}</div>
+                  <p className="text-white font-bold text-lg mb-2">
+                    {lixi.proof.status === 'approved' ? 'Đã duyệt thành công' : 'Đã đánh giá'}
+                  </p>
+                  <p className="text-2xl font-bold text-white">
+                    {(lixi.finalAmount || 0).toLocaleString('vi-VN')}đ
+                  </p>
+                  <p className="text-xs text-slate-300 mt-2">
+                    Duyệt lúc: {new Date(lixi.proof.reviewedAt).toLocaleString('vi-VN')}
+                  </p>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="bg-slate-700/50 rounded-lg p-6 text-center">
+              <div className="text-4xl mb-2">⏳</div>
+              <p className="text-slate-400">Chưa có bằng chứng</p>
+            </div>
+          )}
+        </div>
+
+        <div className="p-4 border-t border-slate-700">
+          <button
+            onClick={onClose}
+            className="w-full py-3 bg-slate-700 hover:bg-slate-600 text-white font-bold rounded-lg transition-colors"
+          >
+            Đóng
+          </button>
+        </div>
       </div>
     </div>
   )

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { getLixi, uploadProof } from '../api/lixiApi'
+import { AlertModal } from '../components/Modal'
 
 function UploadProof() {
   const { id } = useParams()
@@ -12,6 +13,8 @@ function UploadProof() {
   const [description, setDescription] = useState('')
   const [uploading, setUploading] = useState(false)
   const [previewUrl, setPreviewUrl] = useState('')
+  const [successModal, setSuccessModal] = useState({ isOpen: false, reviewLink: '' })
+  const [alertModal, setAlertModal] = useState({ isOpen: false, title: '', message: '', type: 'info' })
 
   useEffect(() => {
     const fetchLixi = async () => {
@@ -47,12 +50,15 @@ function UploadProof() {
       await uploadProof(id, { type: proofType, url: proofUrl, description })
 
       const reviewLink = `${window.location.origin}/review/${id}`
-      alert(`✅ Đã gửi bằng chứng thành công!\n\nGửi link này cho ${lixiData.senderName} để xác nhận:\n${reviewLink}`)
-      
-      navigate('/success')
+      setSuccessModal({ isOpen: true, reviewLink })
 
     } catch (error) {
-      alert('Có lỗi xảy ra. Vui lòng thử lại!')
+      setAlertModal({
+        isOpen: true,
+        title: 'Lỗi',
+        message: 'Có lỗi xảy ra. Vui lòng thử lại!',
+        type: 'error'
+      })
       console.error(error)
     } finally {
       setUploading(false)
@@ -74,9 +80,71 @@ function UploadProof() {
     )
   }
 
+  const handleSuccessModalClose = () => {
+    setSuccessModal({ isOpen: false, reviewLink: '' })
+    navigate('/success')
+  }
+
+  const copyReviewLink = () => {
+    navigator.clipboard.writeText(successModal.reviewLink)
+    setAlertModal({
+      isOpen: true,
+      title: 'Đã copy',
+      message: 'Đã copy link xác nhận!',
+      type: 'success'
+    })
+  }
+
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="card max-w-2xl w-full">
+    <>
+      <AlertModal
+        isOpen={alertModal.isOpen}
+        onClose={() => setAlertModal({ ...alertModal, isOpen: false })}
+        title={alertModal.title}
+        message={alertModal.message}
+        type={alertModal.type}
+      />
+      
+      {successModal.isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full">
+            <div className="bg-gradient-to-r from-green-500 to-green-600 p-6 rounded-t-2xl text-center">
+              <div className="text-6xl mb-2">🎉</div>
+              <h3 className="text-2xl font-bold text-white">Đã Gửi Thành Công!</h3>
+            </div>
+            <div className="p-6 space-y-4">
+              <p className="text-gray-700 text-center text-lg">
+                Bằng chứng của bạn đã được gửi!
+              </p>
+              
+              <div className="bg-blue-50 rounded-lg p-4">
+                <p className="text-sm text-gray-700 font-semibold mb-2">
+                  📤 Gửi link này cho {lixiData.senderName} để xác nhận:
+                </p>
+                <div className="bg-white rounded-lg p-3 mb-3 break-all">
+                  <p className="text-xs text-gray-600">{successModal.reviewLink}</p>
+                </div>
+                <button
+                  onClick={copyReviewLink}
+                  className="w-full py-2 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-lg transition-colors"
+                >
+                  📋 Copy Link
+                </button>
+              </div>
+
+              <button
+                onClick={handleSuccessModalClose}
+                className="w-full py-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200"
+              >
+                Tiếp Tục
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <div className="card max-w-2xl w-full">
         <button
           onClick={() => navigate(`/receive/${id}`)}
           className="text-gray-600 hover:text-gray-800 mb-4"
@@ -201,6 +269,7 @@ function UploadProof() {
         </div>
       </div>
     </div>
+    </>
   )
 }
 
