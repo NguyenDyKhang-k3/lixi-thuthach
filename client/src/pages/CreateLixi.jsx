@@ -27,9 +27,10 @@ function CreateLixi() {
   const [showCopySuccess, setShowCopySuccess] = useState(false)
   const [alertModal, setAlertModal] = useState({ isOpen: false, title: '', message: '', type: 'info' })
 
-  // Chỉ admin (có token) mới được tạo. Kiểm tra mỗi lần mount và khi storage thay đổi.
+  // Chỉ admin (có token) HOẶC khi allowPublicCreation bật mới được tạo
   const isAdmin = !!adminToken
-  const locked = !isAdmin
+  const allowPublic = settings?.allowPublicCreation ?? false
+  const locked = !isAdmin && !allowPublic
 
   useEffect(() => {
     const token = localStorage.getItem('adminToken')
