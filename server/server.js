@@ -1,6 +1,7 @@
 import express from 'express'
 import cors from 'cors'
 import { v4 as uuidv4 } from 'uuid'
+import Storage from './storage.js'
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -12,14 +13,8 @@ app.use(cors({ origin: true }))
 app.use(express.json({ limit: '50mb' }))
 app.use(express.urlencoded({ extended: true, limit: '50mb' }))
 
-// Storage
-let lixisDatabase = {}
-let settings = {
-  allowPublicCreation: false,  // Mặc định: chỉ admin mới tạo được. Bật trong Admin nếu muốn mọi người tạo.
-  successAmount: 200000,
-  failAmount: 100000,
-}
-let challengesDatabase = {
+// Default challenges
+const defaultChallenges = {
   nam: [
     { id: 'n1', emoji: '🤪', text: 'Quay video làm 5 biểu cảm khuôn mặt khó đỡ nhất', difficulty: 'easy', targetGroup: 'nam' },
     { id: 'n2', emoji: '🕺', text: 'Nhảy 1 điệu nhảy Tết siêu lầy và quay lại', difficulty: 'easy', targetGroup: 'nam' },
@@ -49,6 +44,14 @@ let challengesDatabase = {
     { id: 'nu12', emoji: '😹', text: 'Bắt chúước giọng nói của 5 người trong gia đình', difficulty: 'easy', targetGroup: 'nu' },
   ],
 }
+
+// Storage - Load from files or use defaults
+let lixisDatabase = Storage.loadLixis()
+let settings = Storage.loadSettings()
+let challengesDatabase = Storage.loadChallenges() || defaultChallenges
+
+console.log(`📂 Loaded ${Object.keys(lixisDatabase).length} lixis from storage`)
+console.log(`⚙️ Settings:`, settings)
 
 // Helper - verify admin
 const verifyAdmin = (req, res, next) => {
@@ -110,6 +113,7 @@ app.post('/api/lixi/create', (req, res) => {
     }
 
     lixisDatabase[lixiId] = lixi
+    Storage.autoSaveLixis(lixisDatabase)
 
     res.json({
       success: true,
@@ -141,6 +145,7 @@ app.post('/api/lixi/:id/proof', (req, res) => {
     const lixi = lixisDatabase[id]
     if (!lixi) return res.status(404).json({ error: 'Lixi not found' })
     lixi.proof = { type, url, description, uploadedAt: new Date().toISOString(), status: 'pending' }
+    Storage.autoSaveLixis(lixisDatabase)
     res.json({ success: true, message: 'Proof uploaded successfully' })
   } catch (error) {
     console.error('Error uploading proof:', error)
@@ -159,6 +164,7 @@ app.post('/api/lixi/:id/review', (req, res) => {
     lixi.proof.reviewedAt = new Date().toISOString()
     lixi.finalAmount = approved ? lixi.successAmount : lixi.failAmount
     lixi.status = 'completed'
+    Storage.autoSaveLixis(lixisDatabase)
     res.json({ success: true, approved, amount: lixi.finalAmount })
   } catch (error) {
     console.error('Error reviewing proof:', error)
@@ -221,6 +227,7 @@ app.put('/api/admin/settings', verifyAdmin, (req, res) => {
   if (typeof allowPublicCreation === 'boolean') settings.allowPublicCreation = allowPublicCreation
   if (typeof successAmount === 'number' && successAmount >= 0) settings.successAmount = successAmount
   if (typeof failAmount === 'number' && failAmount >= 0) settings.failAmount = failAmount
+  Storage.autoSaveSettings(settings)
   res.json({ success: true, settings })
 })
 
@@ -232,6 +239,7 @@ app.put('/api/admin/challenges', verifyAdmin, (req, res) => {
   const { challenges } = req.body
   if (challenges && typeof challenges === 'object') {
     challengesDatabase = challenges
+    Storage.autoSaveChallenges(challengesDatabase)
     res.json({ success: true, challenges: challengesDatabase })
   } else {
     res.status(400).json({ error: 'Invalid challenges format' })
@@ -245,6 +253,7 @@ app.post('/api/admin/challenges/:group', verifyAdmin, (req, res) => {
   challenge.id = uuidv4().slice(0, 8)
   challenge.targetGroup = group
   challengesDatabase[group].push(challenge)
+  Storage.autoSaveChallenges(challengesDatabase)
   res.json({ success: true, challenge })
 })
 
@@ -252,6 +261,7 @@ app.delete('/api/admin/challenges/:group/:id', verifyAdmin, (req, res) => {
   const { group, id } = req.params
   if (challengesDatabase[group]) {
     challengesDatabase[group] = challengesDatabase[group].filter(c => c.id !== id)
+    Storage.autoSaveChallenges(challengesDatabase)
   }
   res.json({ success: true })
 })
