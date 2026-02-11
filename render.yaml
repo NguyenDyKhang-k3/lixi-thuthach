@@ -3,7 +3,7 @@
 
 services:
   - type: web
-    name: lixi-thuthach-api
+    name: lixi-thuthach
     runtime: node
     
     # Root directory - chỉ deploy folder server
@@ -20,8 +20,8 @@ services:
       - key: NODE_ENV
         value: production
       - key: FRONTEND_URL
-        value: https://your-frontend-url.vercel.app  # Thay bằng URL Vercel thực tế
+        value: https://lixi-thuthach-five.vercel.app
       - key: ADMIN_PASSWORD
-        value: admin2026  # Mật khẩu admin (nên đổi)
+        value: Khang2026
       - key: PORT
         value: 10000
