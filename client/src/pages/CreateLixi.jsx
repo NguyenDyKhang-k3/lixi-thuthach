@@ -172,6 +172,7 @@ function CreateLixi() {
           </div>
         </div>
       </div>
+      </>
     )
   }
 
